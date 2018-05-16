@@ -13,6 +13,12 @@ Resources:
         - LambdaExecutionRole
         - Arn
       Runtime: java8
+      Events:
+        APIG:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /
       Timeout: 30
       MemorySize: 384
 
