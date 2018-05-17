@@ -14,11 +14,31 @@ Resources:
         - Arn
       Runtime: java8
       Events:
-        APIG:
+        CreateActivity:
           Type: Api
           Properties:
             Method: POST
             Path: /createactivity
+        DescribeActivity:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /describeactivity
+        DescribeActivities:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /describeactivities
+        UpdateActivity:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /updateactivity
+        DeleteActivity:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /deleteactivity
       Timeout: 30
       MemorySize: 384
 

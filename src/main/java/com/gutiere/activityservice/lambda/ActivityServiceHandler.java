@@ -5,43 +5,38 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gutiere.activityservice.activities.*;
+import com.gutiere.activityservice.data.Response;
 import com.gutiere.activityservice.utils.IoManager;
-import org.json.simple.JSONObject;
 
 
 public class ActivityServiceHandler {
 
     public void handleRequest( InputStream inputStream, OutputStream outputStream ) throws IOException {
-
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final IoManager io = new IoManager( inputStream, outputStream, objectMapper );
+        final IoManager io = new IoManager( inputStream, outputStream, new ObjectMapper(  ) );
         final String resource = io.getInputMap().get( "resource" ).toString();
+        final String body = io.getInputMap().get( "body" ).toString();
 
-
-        final String response = executeActivity( resource );
+        final Response response = executeActivity( resource, body );
 
         io.respond( response );
     }
 
-    private String executeActivity( String resource ) {
-
-        System.out.println( String.format( "Resource: %s", resource ) );
-
-        return buildDemoResponse();
-    }
-
-    private String buildDemoResponse(  ) {
-        final JSONObject responseJson = new JSONObject();
-        final String responseCode = "200";
-        final JSONObject headerJson = new JSONObject();
-        headerJson.put( "x-custom-header", "my custom header value" );
-        responseJson.put( "isBase64Encoded", false );
-        responseJson.put( "statusCode", responseCode );
-        responseJson.put( "headers", headerJson );
-        responseJson.put( "body", "YO I'M THE BODY" );
-
-        return responseJson.toJSONString();
-
+    private Response executeActivity( String resource, String body ) {
+        switch( resource ) {
+            case "/createactivity":
+                return new CreateActivity().handleRequest( body );
+            case "/describeactivity":
+                return new DescribeActivty().handleRequest( body );
+            case "/describeactivities":
+                return new DescribeActivities().handleRequest( body );
+            case "/updateactivity":
+                return new UpdateActivity().handleRequest( body );
+            case "/deleteactivity":
+                return new DeleteActivity().handleRequest( body );
+            default:
+                throw new IllegalArgumentException( String.format( "Unknown resource: %s", resource ) );
+        }
     }
 
 }
