@@ -12,4 +12,4 @@ export API_NAME=$PROJECT
 export STACK="${PROJECT}-${STAGE}"
 
 # Lambda
-export HANDLER_PATH="lambda.ActivityServiceHandler::handleRequest"
+export HANDLER_PATH="com.gutiere.activityservice.lambda.ActivityServiceHandler::handleRequest"
