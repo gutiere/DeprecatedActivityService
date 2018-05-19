@@ -47,6 +47,7 @@ Resources:
     Properties:
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - !Ref DynamoDBAccess
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -56,6 +57,42 @@ Resources:
                 - lambda.amazonaws.com
             Action:
               - 'sts:AssumeRole'
+
+  ActivityTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: ActivityTable
+      AttributeDefinitions:
+        - AttributeName: ActivityId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: ActivityId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'
+
+  DynamoDBAccess:
+    Properties:
+      Path: /
+      Description: Policy that allows the reading and writing to DDB tables.
+      PolicyDocument:
+        Statement:
+          - Action:
+              - 'dynamodb:PutItem'
+            Effect: Allow
+            Resource:
+              - !Join
+                - /
+                - - !Join
+                    - ':'
+                    - - 'arn:aws:dynamodb'
+                      - !Ref 'AWS::Region'
+                      - !Ref 'AWS::AccountId'
+                      - table
+                  - !Ref ActivityTable
+        Version: 2012-10-17
+    Type: 'AWS::IAM::ManagedPolicy'
 
 Parameters:
   CodeBucket:
