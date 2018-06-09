@@ -12,6 +12,8 @@ import java.util.UUID;
 public class CreateActivity {
     public Response handleRequest( String body ) {
 
+        System.out.println( "Body(" + body + ")");
+
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.defaultClient();
 
         DynamoDB dynamoDB = new DynamoDB( client );

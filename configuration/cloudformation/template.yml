@@ -39,6 +39,31 @@ Resources:
           Properties:
             Method: POST
             Path: /deleteactivity
+        CreateActivitySession:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /createactivitysession
+        DescribeActivitySession:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /describeactivitysession
+        DescribeActivitySessions:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /describeactivitysessions
+        UpdateActivitySession:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /updateactivitysession
+        DeleteActivitySession:
+          Type: Api
+          Properties:
+            Method: POST
+            Path: /deleteactivitysession
       Timeout: 30
       MemorySize: 384
 
@@ -71,6 +96,32 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: '5'
         WriteCapacityUnits: '5'
+
+  ActivitySessionTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: ActivitySessionTable
+      AttributeDefinitions:
+        - AttributeName: ActivitySessionId
+          AttributeType: S
+        - AttributeName: ActivityId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: ActivitySessionId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'
+      GlobalSecondaryIndexes:
+        - IndexName: "ActivityId-Index"
+          KeySchema:
+            - AttributeName: "ActivityId"
+              KeyType: 'HASH'
+          Projection:
+            ProjectionType: 'ALL'
+          ProvisionedThroughput:
+            ReadCapacityUnits: '5'
+            WriteCapacityUnits: '5'
 
   DynamoDBAccess:
     Properties:
